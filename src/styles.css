@@ -15,7 +15,7 @@
 
 html[data-theme=dark] {
     --bg: #090b10;
-    --surface: #11141b;
+    --surface: #212121;
     --text: #f5f7fb;
     --muted: #9ba1ae;
     --line: #252a34;
@@ -92,7 +92,7 @@ a {
 }
 
 .links button,
-.footer button {
+footer button {
     background: none;
     border: 0;
     color: var(--text);
@@ -555,10 +555,16 @@ footer svg {
     width: 15px
 }
 
-.footer button {
+footer button {
     display: block;
     color: #d4d7dd;
-    padding: 5px 0
+    padding: 5px 0;
+    font-size: 12px
+}
+
+footer a:hover,
+footer button:hover {
+    color: #fff
 }
 
 .legal {
@@ -833,10 +839,114 @@ footer svg {
 }
 
 .fixed-bottom-left {
-  position: fixed;
-  bottom: 0px;
-  left: 0px;
-  z-index: 999;
-  width: 140px;
-  height: auto;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 999;
+    width: 140px;
+    height: auto;
+    pointer-events: none
+}
+
+html[data-theme=dark] .fixed-bottom-left {
+    filter: invert(1);
+    opacity: .5
+}
+
+@media(max-width:600px) {
+    .fixed-bottom-left {
+        display: none
+    }
+}
+
+/* Accessibility helpers */
+:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px
+}
+
+.sr {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap
+}
+
+.skip {
+    position: fixed;
+    top: -60px;
+    left: 16px;
+    z-index: 100;
+    background: var(--blue);
+    color: #fff;
+    padding: 12px 18px;
+    text-decoration: none;
+    font-size: 13px
+}
+
+.skip:focus {
+    top: 16px
+}
+
+section[id] {
+    scroll-margin-top: 86px
+}
+
+.links button:hover,
+.textBtn:hover,
+.back:hover {
+    color: var(--blue)
+}
+
+.quote:hover,
+.primary:hover {
+    filter: brightness(1.1)
+}
+
+.cardLink {
+    text-decoration: none
+}
+
+/* Other services strip on service detail pages */
+.otherServices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-top: 22px
+}
+
+.otherServices a {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 28px 32px;
+    border: 1px solid var(--line);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    transition: border-color .3s
+}
+
+.otherServices a:hover {
+    border-color: var(--blue)
+}
+
+.otherServices span {
+    font-size: 11px;
+    color: var(--blue)
+}
+
+.otherServices svg {
+    width: 18px;
+    margin-left: auto
+}
+
+@media(max-width:760px) {
+    .otherServices {
+        grid-template-columns: 1fr
+    }
 }
