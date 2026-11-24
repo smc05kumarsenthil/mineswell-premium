@@ -45,7 +45,7 @@ A `dev` launch configuration (port 5173, strict port) is also defined in `.claud
 ## How it works
 
 ### Page sections
-The home page is one scrolling page with these sections: `home`, `about`, `services`, `projects` and `contact`. The nav buttons scroll smoothly to each section by its `id`.
+The home page is one scrolling page with these sections: `home`, `services`, `projects` and `contact`. The nav buttons scroll smoothly to each section by its `id`. The "About" and "Clients" nav items open their own pages.
 
 ### Service detail pages
 Each service has its own view, reached through a hash route: `#/services/<slug>`. The available slugs are:
@@ -54,7 +54,7 @@ Each service has its own view, reached through a hash route: `#/services/<slug>`
 - `#/services/maintenance`
 - `#/services/drilling`
 
-The clients page is at `#/clients`.
+The about page is at `#/about` and the clients page is at `#/clients`.
 
 Hash routing means the browser Back button and shared links work without server-side routing configuration. Any static host can serve the site.
 
@@ -72,6 +72,8 @@ All content is in [src/App.jsx](src/App.jsx):
 | Service cards on the home page  | `services` array                |
 | Service detail page text        | `serviceDetails` object (keyed by slug) |
 | "Field capability" checklist    | `capabilities` array            |
+| About page values (`#/about`)   | `values` array                  |
+| Managing Director profile       | `md` (name, role, optional `photo` in `public/team/`), `mdHighlights`, `mdCareer` |
 | Clients page (`#/clients`)      | `clients` array (name, sector, location, optional `logo` in `public/clients/`) |
 | Nav sections                    | `sections` array                |
 | WhatsApp "Request support" link | `whatsapp` constant             |

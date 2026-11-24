@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowUpRight, Check, ChevronDown, Clock, Cog, Pickaxe, Mail, MapPin, Menu, MessageCircle, Moon, Phone, Siren, Sun, Users, Wrench, X } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight, Check, Clock, Cog, Gauge, Pickaxe, Mail, MapPin, Menu, MessageCircle, Moon, Phone, ShieldCheck, Siren, Sun, Users, Wrench, X } from 'lucide-react';
 
 const services = [
     { slug: 'adhoc', n: '01', title: 'Adhoc services', Icon: Siren, text: 'On-call mining and drilling assistance for urgent technical support, maintenance, supervision and operational guidance.' },
@@ -41,8 +41,26 @@ const serviceDetails = {
 };
 
 const capabilities = ['Preventive maintenance', 'Breakdown support', 'Mechanical repairs', 'Equipment inspection', 'Shutdown support', 'Site coordination'];
-// Main nav. Entries are home-page section ids, except 'clients' which opens the #/clients page.
+// Main nav. Entries are home-page section ids, except those in `pages`, which open a sub-page.
 const sections = ['home', 'about', 'services', 'clients', 'projects', 'contact'];
+const pages = ['about', 'clients'];
+
+// About page
+const values = [
+    [ShieldCheck, 'Work safely', 'Safe execution comes first on every site, for our team and for the customer’s people and equipment.'],
+    [Wrench, 'Solve problems efficiently', 'Systematic troubleshooting and practical engineering that get to the root cause without wasted time.'],
+    [Gauge, 'Keep equipment moving', 'Everything we do is measured by availability: less downtime and more productive hours on site.']
+];
+
+// Managing Director profile. `photo` is optional: put a file in public/team/ and use e.g. '/team/sumeet-kumar.jpg'.
+const md = { name: 'Sumeet Kumar', role: 'Managing Director', photo: null };
+const mdHighlights = [['~20', 'Years of experience'], ['Service', 'Team leadership'], ['Sales', 'Business development']];
+const mdCareer = [
+    ['Technical support', 'Started in a hands-on technical support role, building a sound, practical understanding of surface drilling equipment in the field.'],
+    ['Service management', 'Held management roles at Sandvik and Revathi Equipment India Limited, leading service teams responsible for drilling equipment maintenance and support.'],
+    ['Business development', 'Worked closely with sales teams on business development, connecting customer needs with the right service and equipment solutions.'],
+    ['Managing Director, Mineswell Services', 'Today leads Mineswell, bringing field experience and management discipline to every customer site.']
+];
 
 // TEMPLATE DATA: replace with real clients before going live.
 // `logo` is optional: put files in public/clients/ and use e.g. '/clients/acme.svg'.
@@ -62,10 +80,11 @@ const phone = '+91 91992 62531';
 const tel = 'tel:+919199262531';
 
 // Sub-pages use hash routes so the browser Back button and shared links work:
-// #/services/<slug> → service detail, #/clients → clients page. Anything else → home.
+// #/services/<slug> → service detail, #/about and #/clients → those pages. Anything else → home.
 const routeFromHash = () => {
     const h = window.location.hash;
-    if (/^#\/clients\/?$/.test(h)) return 'clients';
+    const p = h.match(/^#\/(\w+)\/?$/);
+    if (p && pages.includes(p[1])) return p[1];
     const m = h.match(/^#\/services\/([\w-]+)/);
     return m && serviceDetails[m[1]] ? `service:${m[1]}` : null;
 };
@@ -110,14 +129,14 @@ function App() {
     }, []);
 
     useEffect(() => {
-        const title = route === 'clients' ? 'Our Clients' : servicePage && serviceDetails[servicePage].title;
+        const title = { clients: 'Our Clients', about: 'About Us' }[route] || (servicePage && serviceDetails[servicePage].title);
         document.title = title ? `${title} | Mineswell Services` : 'Mineswell Services | Engineering that keeps mining moving';
         if (route) window.scrollTo({ top: 0, behavior: 'instant' });
     }, [route]);
 
     const go = id => {
         setOpen(false);
-        if (id === 'clients') { window.location.hash = '#/clients'; return; }
+        if (pages.includes(id)) { window.location.hash = `#/${id}`; return; }
         if (route) {
             history.pushState(null, '', window.location.pathname);
             setRoute(null);
@@ -175,6 +194,58 @@ function App() {
         </div>;
     }
 
+    if (route === 'about') {
+        return <div className="site">
+            {header}
+            <main className="servicePage aboutPage">
+                <button className="back" onClick={() => go('home')}><ArrowLeft /> Home</button>
+                <span className="kicker">Who we are</span>
+                <h1>About Us</h1>
+                <p className="serviceIntro">Mineswell Services supports mining operations with dependable equipment maintenance, responsive technical support and practical engineering capability.</p>
+
+                <section className="aboutLead" data-reveal="up">
+                    <h2>ENGINEERING FOR<br /><span>DEMANDING OPERATIONS.</span></h2>
+                    <p>Our focus is simple: work safely, solve problems efficiently and help customers keep critical equipment moving.</p>
+                </section>
+
+                <div className="detailCards" data-reveal="stagger">
+                    {values.map(([Icon, t, d]) => <article key={t}><Icon aria-hidden="true" /><h3>{t}</h3><p>{d}</p></article>)}
+                </div>
+
+                <section className="mdProfile" aria-labelledby="md-name">
+                    <div className="mdAside" data-reveal="up">
+                        <div className="mdPhoto">
+                            {md.photo ? <img src={md.photo} alt={md.name} /> : <span aria-hidden="true">{initials(md.name)}</span>}
+                        </div>
+                        <div className="mdStats">
+                            {mdHighlights.map(([v, l]) => <div key={l}><strong>{v}</strong><span>{l}</span></div>)}
+                        </div>
+                    </div>
+                    <div className="mdBody">
+                        <div data-reveal="up">
+                            <span className="kicker">Leadership</span>
+                            <h2 id="md-name">{md.name}</h2>
+                            <p className="mdRole">{md.role}</p>
+                            <p>{md.name} brings close to 20 years of experience in the maintenance and service of surface drilling equipment. He began his career in a technical support role, building a sound, hands-on understanding of drill systems in the field.</p>
+                            <p>He went on to hold management roles at Sandvik and Revathi Equipment India Limited, leading service teams and working alongside sales teams on business development. That mix of field engineering, team leadership and customer focus shapes how Mineswell works today.</p>
+                        </div>
+                        <ol className="timeline" data-reveal="stagger">
+                            {mdCareer.map(([t, d]) => <li key={t}><h3>{t}</h3><p>{d}</p></li>)}
+                        </ol>
+                    </div>
+                </section>
+
+                <section className="serviceDetail" data-reveal="up">
+                    <h2>Work with us.</h2>
+                    <p>Tell us about your equipment, site or service requirement. We will respond with a practical next step.</p>
+                    <a className="primary" href={talkToUs} target="_blank" rel="noreferrer">Talk to us <ArrowUpRight /></a>
+                </section>
+            </main>
+            <Footer />
+            {cornerArt}
+        </div>;
+    }
+
     if (route === 'clients') {
         return <div className="site">
             {header}
@@ -207,7 +278,7 @@ function App() {
     }
 
     return <div className="site">
-        <a className="skip" href="#about">Skip to content</a>
+        <a className="skip" href="#services">Skip to content</a>
         {header}
         <main>
             <section id="home" className="hero"><div className="heroMedia" /><div className="heroShade" /><div className="heroGrid" />
@@ -217,12 +288,11 @@ function App() {
                     <p>Maintenance, repair and field support for drilling equipment operating in demanding mining environments.</p>
                     <div className="heroCtas">
                         <button className="primary" onClick={() => go('services')}>Explore services <ArrowUpRight /></button>
-                        <button className="textBtn" onClick={() => go('about')}>Discover Mineswell <ChevronDown /></button>
+                        <button className="textBtn" onClick={() => go('about')}>Discover Mineswell <ArrowRight /></button>
                     </div>
                 </div>
                 <div className="heroFoot"><span>Rourkela, India</span><span className="scroll">Scroll to explore <i /></span></div>
             </section>
-            <section id="about" className="section about"><div data-reveal="up"><span className="kicker">Who we are</span><h2>ENGINEERING FOR<br /><span>DEMANDING OPERATIONS.</span></h2></div><div className="aboutCopy" data-reveal="up"><p>Mineswell Services supports mining operations with dependable equipment maintenance, responsive technical support and practical engineering capability.</p><p>Our focus is simple: work safely, solve problems efficiently and help customers keep critical equipment moving.</p><button className="linkBtn" onClick={() => go('contact')}>Work with us <ArrowUpRight /></button></div></section>
             <section id="services" className="section services">
                 <div className="sectionHead" data-reveal="up"><div><span className="kicker">What we do</span><h2>OUR SERVICES.</h2></div><p>Practical expertise delivered where performance, safety and uptime matter most.</p></div>
                 <div className="serviceGrid" data-reveal="group">{services.map((s, i) => (
