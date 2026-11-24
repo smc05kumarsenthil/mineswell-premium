@@ -7,7 +7,7 @@
     --text: #111319;
     --muted: #656a75;
     --line: #dfe2e8;
-    --header: rgba(6,6,6, 0.5);
+    --header: rgba(255, 255, 255, .86);
     --logo-bg: #5270FF;
     --logo-ink: #fff;
     --pink: #d4b2b2;
@@ -55,7 +55,8 @@ a {
     z-index: 50;
     background: var(--header);
     backdrop-filter: blur(18px);
-    border-bottom: 1px solid var(--line)
+    border-bottom: 1px solid var(--line);
+    transition: background-color .3s, border-color .3s
 }
 
 .brand {
@@ -1557,20 +1558,55 @@ section[id] {
     }
 }
 
-/* Clients page */
-.clientGrid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+/* Clients: auto-scrolling strip on the home page */
+.clients {
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden
+}
+
+.clients .sectionHead {
+    padding: 0 7vw
+}
+
+.marquee {
+    /* Fade the cards out at both edges */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)
+}
+
+.marqueeTrack {
+    display: flex;
+    width: max-content;
+    padding: 12px 0 28px; /* room for the hover lift and shadow */
+    animation: marquee 40s linear infinite
+}
+
+/* Pause when the visitor hovers or tabs into the strip */
+.marquee:hover .marqueeTrack,
+.marquee:focus-within .marqueeTrack {
+    animation-play-state: paused
+}
+
+@keyframes marquee {
+    to { transform: translateX(-50%) }
+}
+
+.marqueeGroup {
+    display: flex;
     gap: 22px;
-    margin: 65px 0
+    margin: 0;
+    padding: 0 22px 0 0; /* trailing gap so the seam between copies matches */
+    list-style: none
 }
 
 .clientCard {
+    flex: none;
+    width: 300px;
     background: var(--surface);
     border: 1px solid var(--line);
     padding: 34px;
-    transition: opacity .6s var(--ease) calc(var(--i, 0) * 80ms), translate .7s var(--ease) calc(var(--i, 0) * 80ms),
-        transform .4s var(--ease), border-color .3s, box-shadow .4s
+    transition: transform .4s var(--ease), border-color .3s, box-shadow .4s
 }
 
 .clientCard:hover {
@@ -1634,15 +1670,25 @@ section[id] {
     color: var(--blue)
 }
 
-@media(max-width:900px) {
-    .clientGrid {
-        grid-template-columns: 1fr 1fr
+@media(max-width:600px) {
+    .clients .sectionHead {
+        padding: 0 24px
+    }
+
+    .clientCard {
+        width: 250px;
+        padding: 26px
     }
 }
 
-@media(max-width:600px) {
-    .clientGrid {
-        grid-template-columns: 1fr
+/* Reduced motion: no auto-scroll; let the visitor swipe/scroll the strip instead */
+@media(prefers-reduced-motion:reduce) {
+    .marquee {
+        overflow-x: auto
+    }
+
+    .marqueeGroup[aria-hidden] {
+        display: none
     }
 }
 

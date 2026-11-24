@@ -42,8 +42,8 @@ const serviceDetails = {
 
 const capabilities = ['Preventive maintenance', 'Breakdown support', 'Mechanical repairs', 'Equipment inspection', 'Shutdown support', 'Site coordination'];
 // Main nav. Entries are home-page section ids, except those in `pages`, which open a sub-page.
-const sections = ['home', 'about', 'services', 'clients', 'projects', 'contact'];
-const pages = ['about', 'clients'];
+const sections = ['home', 'about', 'services', 'projects', 'clients', 'contact'];
+const pages = ['about'];
 
 // About page
 const values = [
@@ -80,7 +80,7 @@ const phone = '+91 91992 62531';
 const tel = 'tel:+919199262531';
 
 // Sub-pages use hash routes so the browser Back button and shared links work:
-// #/services/<slug> → service detail, #/about and #/clients → those pages. Anything else → home.
+// #/services/<slug> → service detail, #/about → about page. Anything else → home.
 const routeFromHash = () => {
     const h = window.location.hash;
     const p = h.match(/^#\/(\w+)\/?$/);
@@ -129,7 +129,7 @@ function App() {
     }, []);
 
     useEffect(() => {
-        const title = { clients: 'Our Clients', about: 'About Us' }[route] || (servicePage && serviceDetails[servicePage].title);
+        const title = { about: 'About Us' }[route] || (servicePage && serviceDetails[servicePage].title);
         document.title = title ? `${title} | Mineswell Services` : 'Mineswell Services | Engineering that keeps mining moving';
         if (route) window.scrollTo({ top: 0, behavior: 'instant' });
     }, [route]);
@@ -246,36 +246,6 @@ function App() {
         </div>;
     }
 
-    if (route === 'clients') {
-        return <div className="site">
-            {header}
-            <main className="servicePage clientsPage">
-                <button className="back" onClick={() => go('home')}><ArrowLeft /> Home</button>
-                <span className="kicker">Who we work with</span>
-                <h1>Our Clients</h1>
-                <p className="serviceIntro">We support mining operators, quarries and drilling contractors with maintenance, field support and technical assistance. Some of the organisations that trust Mineswell on site are listed below.</p>
-                <div className="clientGrid" data-reveal="stagger">
-                    {clients.map((c, i) => (
-                        <article className="clientCard" key={i}>
-                            <div className="clientLogo">
-                                {c.logo ? <img src={c.logo} alt={`${c.name} logo`} loading="lazy" /> : <span aria-hidden="true">{initials(c.name)}</span>}
-                            </div>
-                            <h3>{c.name}</h3>
-                            <p>{c.sector}</p>
-                            <span className="clientLoc"><MapPin aria-hidden="true" />{c.location}</span>
-                        </article>
-                    ))}
-                </div>
-                <section className="serviceDetail" data-reveal="up">
-                    <h2>Become a client.</h2>
-                    <p>Tell us about your site and equipment. We will respond with a practical plan for maintenance or field support.</p>
-                    <a className="primary" href={talkToUs} target="_blank" rel="noreferrer">Talk to us <ArrowUpRight /></a>
-                </section>
-            </main>
-            <Footer />
-            {cornerArt}
-        </div>;
-    }
 
     return <div className="site">
         <a className="skip" href="#services">Skip to content</a>
@@ -313,6 +283,28 @@ function App() {
             </section>
             <section id="projects" className="feature"><div className="featureContent"><div data-reveal="up"><span className="kicker">Field capability</span><h2>EXPERTISE THAT<br />KEEPS MINING<br /><span>MOVING.</span></h2><p>From scheduled maintenance to urgent site support, our teams bring disciplined execution and a practical understanding of heavy equipment.</p></div><div className="checks" data-reveal="stagger">{capabilities.map(x => <span key={x}><Check aria-hidden="true" />{x}</span>)}</div></div></section>
             <section className="stats" aria-label="Our commitments" data-reveal="stagger"><div><strong>24/7</strong><span>Support mindset</span></div><div><strong>100%</strong><span>Safety focused</span></div><div><strong>360°</strong><span>Service approach</span></div><div><strong>1</strong><span>Accountable partner</span></div></section>
+            <section id="clients" className="section clients">
+                <div className="sectionHead" data-reveal="up"><div><span className="kicker">Who we work with</span><h2>OUR CLIENTS.</h2></div><p>Mining operators, quarries and drilling contractors who trust Mineswell on site.</p></div>
+                {/* Auto-scrolling strip: the list is rendered twice so the loop is seamless; the copy is hidden from screen readers. */}
+                <div className="marquee" data-reveal="up">
+                    <div className="marqueeTrack">
+                        {[0, 1].map(copy => (
+                            <ul className="marqueeGroup" key={copy} aria-hidden={copy === 1 || undefined}>
+                                {clients.map((c, i) => (
+                                    <li className="clientCard" key={i}>
+                                        <div className="clientLogo">
+                                            {c.logo ? <img src={c.logo} alt={copy ? '' : `${c.name} logo`} loading="lazy" /> : <span aria-hidden="true">{initials(c.name)}</span>}
+                                        </div>
+                                        <h3>{c.name}</h3>
+                                        <p>{c.sector}</p>
+                                        <span className="clientLoc"><MapPin aria-hidden="true" />{c.location}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        ))}
+                    </div>
+                </div>
+            </section>
             <section id="contact" className="contact">
                 <div className="contactBg" aria-hidden="true" />
                 <div className="contactMain">
