@@ -154,6 +154,13 @@ footer button {
     display: none
 }
 
+/* Match the 44px theme/menu buttons */
+.quote {
+    height: 44px;
+    padding: 0 20px;
+    box-sizing: border-box
+}
+
 .hero {
     height: 100svh;
     min-height: 740px;
