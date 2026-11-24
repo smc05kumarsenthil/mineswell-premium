@@ -23,6 +23,7 @@ npm run dev        # start dev server at http://localhost:5173
 | `npm run dev`     | Start the Vite dev server with hot reload       |
 | `npm run build`   | Build the production bundle into `dist/`        |
 | `npm run preview` | Serve the built `dist/` folder locally to check it |
+| `npm run format`  | Format the source files with Prettier           |
 
 A `dev` launch configuration (port 5173, strict port) is also defined in `.claude/launch.json`.
 

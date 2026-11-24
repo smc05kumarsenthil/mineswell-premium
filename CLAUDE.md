@@ -5,6 +5,7 @@ Marketing site for Mineswell Services, a mining equipment maintenance and field-
 ## Commands
 - `npm run dev`: dev server on http://localhost:5173 (launch config in `.claude/launch.json` uses `--port 5173 --strictPort`)
 - `npm run build`: builds into `dist/`
+- `npm run format`: Prettier (`.prettierrc.json`: 4 spaces, single quotes, width 100). Run it after editing. Long prose strings are intentionally left unsplit.
 - No tests, linter or TypeScript. `typescript` is in deps but unused; everything is `.jsx`.
 
 ## Layout (the whole app is 3 source files)
@@ -33,7 +34,8 @@ Marketing site for Mineswell Services, a mining equipment maintenance and field-
 ## Conventions
 - Keep everything in `App.jsx` unless it grows substantially. Don't add a router or CSS framework.
 - Accessibility is deliberate: aria-labels, `.sr` text, a skip link and `aria-hidden` icons. Preserve these.
-- The code uses 4-space indentation and dense one-line JSX for the home sections.
+- Formatting is handled by Prettier; don't hand-compact JSX onto single lines.
+- WhatsApp links are built with `waLink(message)`; don't hard-code encoded wa.me URLs.
 
 ## Gotchas
 - `dist/` is **committed** (not gitignored). Rebuilding replaces the hashed assets in `dist/assets/`.
