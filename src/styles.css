@@ -719,27 +719,40 @@ h2 span {
 }
 
 footer {
-    padding: 70px 7vw 30px;
+    padding: 56px 7vw;
     background: #05070a;
     color: #fff;
-    display: grid;
-    grid-template-columns: 2fr 1.5fr 1fr;
-    gap: 50px
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px 50px
 }
 
 .footerBrand {
     display: flex;
-    gap: 16px;
-    align-items: flex-start
+    gap: 18px;
+    align-items: center
 }
 
 .footerBrand img {
-    width: 64px
+    width: 64px;
+    height: 64px;
+    flex: none;
+    display: block
+}
+
+.footerBrand b {
+    display: block;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+    line-height: 1.2
 }
 
 .footerBrand p {
     color: #8e95a3;
-    font-size: 12px
+    font-size: 12px;
+    margin: 6px 0 0
 }
 
 footer h4 {
@@ -778,7 +791,8 @@ footer button:hover {
 .legal {
     color: #727987;
     font-size: 11px;
-    align-self: end
+    line-height: 1.7;
+    text-align: right
 }
 
 @media(max-width:900px) {
@@ -844,9 +858,6 @@ footer button:hover {
         justify-self: center
     }
 
-    footer {
-        grid-template-columns: 1fr 1fr
-    }
 }
 
 @media(max-width:600px) {
@@ -919,12 +930,13 @@ footer button:hover {
     }
 
     footer {
-        padding: 60px 24px 30px;
-        grid-template-columns: 1fr
+        padding: 48px 24px;
+        flex-direction: column;
+        align-items: flex-start
     }
 
     .legal {
-        margin-top: 20px
+        text-align: left
     }
 }
 
