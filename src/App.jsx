@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowUpRight, Check, ChevronDown, Clock, Mail, MapPin, Menu, Moon, Phone, Sun, Users, Wrench, X } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Check, ChevronDown, Clock, Cog, Drill, Mail, MapPin, Menu, Moon, Phone, Siren, Sun, Users, Wrench, X } from 'lucide-react';
 
 const services = [
-    { slug: 'adhoc', n: '01', title: 'Adhoc services', text: 'On-call mining and drilling assistance for urgent technical support, maintenance, supervision and operational guidance.', image: '/hero-drill.jpg' },
-    { slug: 'maintenance', n: '02', title: 'Equipment maintenance', text: 'Planned and corrective maintenance focused on availability, reliability and equipment life.', image: '/hero-drill.jpg' },
-    { slug: 'drilling', n: '03', title: 'Drill assistance', text: 'Troubleshooting, maintenance, deployment and field supervision for surface drilling equipment.', image: '/hero-drill.jpg' }
+    { slug: 'adhoc', n: '01', title: 'Adhoc services', Icon: Siren, text: 'On-call mining and drilling assistance for urgent technical support, maintenance, supervision and operational guidance.' },
+    { slug: 'maintenance', n: '02', title: 'Equipment maintenance', Icon: Cog, text: 'Planned and corrective maintenance focused on availability, reliability and equipment life.' },
+    { slug: 'drilling', n: '03', title: 'Drill assistance', Icon: Drill, text: 'Troubleshooting, maintenance, deployment and field supervision for surface drilling equipment.' }
 ];
 
 const serviceDetails = {
@@ -41,15 +41,34 @@ const serviceDetails = {
 };
 
 const capabilities = ['Preventive maintenance', 'Breakdown support', 'Mechanical repairs', 'Equipment inspection', 'Shutdown support', 'Site coordination'];
-const sections = ['home', 'about', 'services', 'projects', 'contact'];
-const whatsapp = 'https://wa.me/919199362531?text=Hello%20Mineswell%20Services%2C%20I%20would%20like%20to%20request%20support.';
-const email = 'sumeet.kumar@mineswell.co.in';
+// Main nav. Entries are home-page section ids, except 'clients' which opens the #/clients page.
+const sections = ['home', 'about', 'services', 'clients', 'projects', 'contact'];
 
-// Service pages live at #/services/<slug> so the browser Back button and shared links work.
-const slugFromHash = () => {
-    const m = window.location.hash.match(/^#\/services\/([\w-]+)/);
-    return m && serviceDetails[m[1]] ? m[1] : null;
+// TEMPLATE DATA: replace with real clients before going live.
+// `logo` is optional: put files in public/clients/ and use e.g. '/clients/acme.svg'.
+// Without a logo, the card shows the client's initials.
+const clients = [
+    { name: 'Client Name', sector: 'Iron ore mining', location: 'Odisha, India', logo: null },
+    { name: 'Client Name', sector: 'Coal mining', location: 'Jharkhand, India', logo: null },
+    { name: 'Client Name', sector: 'Limestone quarry', location: 'Chhattisgarh, India', logo: null },
+    { name: 'Client Name', sector: 'Surface drilling contractor', location: 'Odisha, India', logo: null },
+    { name: 'Client Name', sector: 'Manganese mining', location: 'Odisha, India', logo: null },
+    { name: 'Client Name', sector: 'Infrastructure & tunnelling', location: 'India', logo: null }
+];
+const whatsapp = 'https://wa.me/919199262531?text=Hello%20Mineswell%20Services%2C%20I%20would%20like%20to%20request%20support.';
+const talkToUs = 'https://wa.me/919199262531?text=Hello%20Mineswell%20Services%2C%20I%20would%20like%20to%20discuss%20a%20project.';
+const email ='sumeet.kumar@mineswell.co.in';
+
+// Sub-pages use hash routes so the browser Back button and shared links work:
+// #/services/<slug> → service detail, #/clients → clients page. Anything else → home.
+const routeFromHash = () => {
+    const h = window.location.hash;
+    if (/^#\/clients\/?$/.test(h)) return 'clients';
+    const m = h.match(/^#\/services\/([\w-]+)/);
+    return m && serviceDetails[m[1]] ? `service:${m[1]}` : null;
 };
+
+const initials = name => name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join('');
 
 const initialDark = () => {
     try {
@@ -59,9 +78,21 @@ const initialDark = () => {
 };
 
 function App() {
-    const [servicePage, setServicePage] = useState(slugFromHash);
+    const [route, setRoute] = useState(routeFromHash);
     const [dark, setDark] = useState(initialDark);
     const [open, setOpen] = useState(false);
+    const servicePage = route?.startsWith('service:') ? route.slice(8) : null;
+
+    // Scroll reveal: elements marked data-reveal get the `in` class the first time they enter the viewport.
+    useEffect(() => {
+        const els = document.querySelectorAll('[data-reveal]:not(.in)');
+        if (!('IntersectionObserver' in window)) { els.forEach(el => el.classList.add('in')); return; }
+        const io = new IntersectionObserver(entries => entries.forEach(e => {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        }), { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        els.forEach(el => io.observe(el));
+        return () => io.disconnect();
+    }, [route]);
 
     useEffect(() => {
         const theme = dark ? 'dark' : 'light';
@@ -71,33 +102,37 @@ function App() {
     }, [dark]);
 
     useEffect(() => {
-        const onHash = () => setServicePage(slugFromHash());
+        const onHash = () => setRoute(routeFromHash());
         window.addEventListener('hashchange', onHash);
         return () => window.removeEventListener('hashchange', onHash);
     }, []);
 
     useEffect(() => {
-        const data = servicePage && serviceDetails[servicePage];
-        document.title = data ? `${data.title} | Mineswell Services` : 'Mineswell Services | Engineering that keeps mining moving';
-        if (data) window.scrollTo({ top: 0, behavior: 'instant' });
-    }, [servicePage]);
+        const title = route === 'clients' ? 'Our Clients' : servicePage && serviceDetails[servicePage].title;
+        document.title = title ? `${title} | Mineswell Services` : 'Mineswell Services | Engineering that keeps mining moving';
+        if (route) window.scrollTo({ top: 0, behavior: 'instant' });
+    }, [route]);
 
     const go = id => {
         setOpen(false);
-        if (servicePage) {
+        if (id === 'clients') { window.location.hash = '#/clients'; return; }
+        if (route) {
             history.pushState(null, '', window.location.pathname);
-            setServicePage(null);
+            setRoute(null);
         }
         setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 0);
     };
     const openService = slug => { window.location.hash = `#/services/${slug}` };
+
+    // Decorative corner graphic, fixed above all content on every page.
+    const cornerArt = <img src="/web.png" alt="" aria-hidden="true" className="fixed-bottom-left" />;
 
     const header = (
         <header className="nav">
             <a className="brand" href="#home" onClick={e => { e.preventDefault(); go('home') }} aria-label="Mineswell Services – home">
                 <img src="/logo.svg" alt="" width="54" height="54" /><span><b>MINESWELL</b><small>SERVICES</small></span>
             </a>
-            {!servicePage && (
+            {!route && (
                 <nav id="site-nav" className={open ? 'links open' : 'links'} aria-label="Main">
                     {sections.map(x => <button key={x} onClick={() => go(x)}>{x}</button>)}
                 </nav>
@@ -105,7 +140,7 @@ function App() {
             <div className="navActions">
                 <button className="theme" onClick={() => setDark(!dark)} aria-label={dark ? 'Switch to light theme' : 'Switch to dark theme'}>{dark ? <Sun /> : <Moon />}</button>
                 <a className="quote" href={whatsapp} target="_blank" rel="noreferrer">Request support <ArrowUpRight /></a>
-                {!servicePage && (
+                {!route && (
                     <button className="hamb" onClick={() => setOpen(!open)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} aria-controls="site-nav">{open ? <X /> : <Menu />}</button>
                 )}
             </div>
@@ -121,19 +156,51 @@ function App() {
                 <span className="kicker">Mineswell field services</span>
                 <h1>{data.title}</h1>
                 <p className="serviceIntro">{data.intro}</p>
-                <div className="detailCards">{data.cards.map(([Icon, t, d]) => <article key={t}><Icon aria-hidden="true" /><h3>{t}</h3><p>{d}</p></article>)}</div>
-                <section className="serviceDetail">
+                <div className="detailCards" data-reveal="stagger">{data.cards.map(([Icon, t, d]) => <article key={t}><Icon aria-hidden="true" /><h3>{t}</h3><p>{d}</p></article>)}</div>
+                <section className="serviceDetail" data-reveal="up">
                     <h2>Reliable mining support.</h2>
                     <p>{data.detail}</p>
                     <a className="primary" href={whatsapp} target="_blank" rel="noreferrer">Discuss your requirement <ArrowUpRight /></a>
                 </section>
-                <nav className="otherServices" aria-label="Other services">
+                <nav className="otherServices" aria-label="Other services" data-reveal="up">
                     {services.filter(s => s.slug !== servicePage).map(s => (
                         <a key={s.slug} href={`#/services/${s.slug}`}><span>{s.n}</span>{s.title}<ArrowUpRight /></a>
                     ))}
                 </nav>
             </main>
-            <Footer go={go} />
+            <Footer />
+            {cornerArt}
+        </div>;
+    }
+
+    if (route === 'clients') {
+        return <div className="site">
+            {header}
+            <main className="servicePage clientsPage">
+                <button className="back" onClick={() => go('home')}><ArrowLeft /> Home</button>
+                <span className="kicker">Who we work with</span>
+                <h1>Our Clients</h1>
+                <p className="serviceIntro">We support mining operators, quarries and drilling contractors with maintenance, field support and technical assistance. Some of the organisations that trust Mineswell on site are listed below.</p>
+                <div className="clientGrid" data-reveal="stagger">
+                    {clients.map((c, i) => (
+                        <article className="clientCard" key={i}>
+                            <div className="clientLogo">
+                                {c.logo ? <img src={c.logo} alt={`${c.name} logo`} loading="lazy" /> : <span aria-hidden="true">{initials(c.name)}</span>}
+                            </div>
+                            <h3>{c.name}</h3>
+                            <p>{c.sector}</p>
+                            <span className="clientLoc"><MapPin aria-hidden="true" />{c.location}</span>
+                        </article>
+                    ))}
+                </div>
+                <section className="serviceDetail" data-reveal="up">
+                    <h2>Become a client.</h2>
+                    <p>Tell us about your site and equipment. We will respond with a practical plan for maintenance or field support.</p>
+                    <a className="primary" href={talkToUs} target="_blank" rel="noreferrer">Talk to us <ArrowUpRight /></a>
+                </section>
+            </main>
+            <Footer />
+            {cornerArt}
         </div>;
     }
 
@@ -151,38 +218,40 @@ function App() {
                         <button className="textBtn" onClick={() => go('about')}>Discover Mineswell <ChevronDown /></button>
                     </div>
                 </div>
-                <div className="heroFoot"><span>Ranchi, India</span><span className="scroll">Scroll to explore <i /></span></div>
+                <div className="heroFoot"><span>Rourkela, India</span><span className="scroll">Scroll to explore <i /></span></div>
             </section>
-            <section id="about" className="section about"><div><span className="kicker">Who we are</span><h2>ENGINEERING FOR<br /><span>DEMANDING OPERATIONS.</span></h2></div><div className="aboutCopy"><p>Mineswell Services supports mining operations with dependable equipment maintenance, responsive technical support and practical engineering capability.</p><p>Our focus is simple: work safely, solve problems efficiently and help customers keep critical equipment moving.</p><button className="linkBtn" onClick={() => go('contact')}>Work with us <ArrowUpRight /></button></div></section>
+            <section id="about" className="section about"><div data-reveal="up"><span className="kicker">Who we are</span><h2>ENGINEERING FOR<br /><span>DEMANDING OPERATIONS.</span></h2></div><div className="aboutCopy" data-reveal="up"><p>Mineswell Services supports mining operations with dependable equipment maintenance, responsive technical support and practical engineering capability.</p><p>Our focus is simple: work safely, solve problems efficiently and help customers keep critical equipment moving.</p><button className="linkBtn" onClick={() => go('contact')}>Work with us <ArrowUpRight /></button></div></section>
             <section id="services" className="section services">
-                <div className="sectionHead"><div><span className="kicker">What we do</span><h2>OUR SERVICES.</h2></div><p>Practical expertise delivered where performance, safety and uptime matter most.</p></div>
-                <div className="serviceGrid">{services.map((s, i) => (
-                    <article className={'card c' + i} key={s.slug} onClick={() => openService(s.slug)}>
-                        <img src={s.image} alt="" loading="lazy" decoding="async" />
-                        <div className="cardOverlay" />
-                        <span>{s.n}</span>
-                        <div>
+                <div className="sectionHead" data-reveal="up"><div><span className="kicker">What we do</span><h2>OUR SERVICES.</h2></div><p>Practical expertise delivered where performance, safety and uptime matter most.</p></div>
+                <div className="serviceGrid" data-reveal="group">{services.map((s, i) => (
+                    <article className="card" key={s.slug} style={{ '--i': i }} onClick={() => openService(s.slug)}>
+                        <div className="cardTop">
+                            <span className="cardNum">{s.n}</span>
+                            <s.Icon className="cardIcon" aria-hidden="true" />
+                        </div>
+                        <div className="cardBody">
                             <h3>{s.title}</h3>
-                            <p>{s.text}</p>
-                            <a className="cardLink" href={`#/services/${s.slug}`} onClick={e => e.stopPropagation()}>View service<span className="sr"> – {s.title}</span> <ArrowUpRight /></a>
+                            <div className="cardReveal"><div>
+                                <p>{s.text}</p>
+                                <a className="cardLink" href={`#/services/${s.slug}`} onClick={e => e.stopPropagation()}>View service<span className="sr"> – {s.title}</span> <ArrowUpRight /></a>
+                            </div></div>
                         </div>
                     </article>
                 ))}</div>
             </section>
-            <section id="projects" className="feature"><div className="featureImage" role="img" aria-label="Engineer working on industrial equipment" /><div className="featureContent"><span className="kicker">Field capability</span><h2>EXPERTISE THAT<br />KEEPS MINING<br /><span>MOVING.</span></h2><p>From scheduled maintenance to urgent site support, our teams bring disciplined execution and a practical understanding of heavy equipment.</p><div className="checks">{capabilities.map(x => <span key={x}><Check aria-hidden="true" />{x}</span>)}</div></div></section>
-            <section className="stats" aria-label="Our commitments"><div><strong>24/7</strong><span>Support mindset</span></div><div><strong>100%</strong><span>Safety focused</span></div><div><strong>360°</strong><span>Service approach</span></div><div><strong>1</strong><span>Accountable partner</span></div></section>
-            <section id="contact" className="contact"><div><span className="kicker">Start a conversation</span><h2>HAVE A PROJECT<br />IN MIND?</h2><p>Tell us about your equipment, site or service requirement. We will respond with a practical next step.</p></div><a className="contactCircle" href={`mailto:${email}`}><span>Talk to us</span><ArrowUpRight /></a></section>
+            <section id="projects" className="feature"><div className="featureContent"><div data-reveal="up"><span className="kicker">Field capability</span><h2>EXPERTISE THAT<br />KEEPS MINING<br /><span>MOVING.</span></h2><p>From scheduled maintenance to urgent site support, our teams bring disciplined execution and a practical understanding of heavy equipment.</p></div><div className="checks" data-reveal="stagger">{capabilities.map(x => <span key={x}><Check aria-hidden="true" />{x}</span>)}</div></div></section>
+            <section className="stats" aria-label="Our commitments" data-reveal="stagger"><div><strong>24/7</strong><span>Support mindset</span></div><div><strong>100%</strong><span>Safety focused</span></div><div><strong>360°</strong><span>Service approach</span></div><div><strong>1</strong><span>Accountable partner</span></div></section>
+            <section id="contact" className="contact"><div data-reveal="up"><span className="kicker">Start a conversation</span><h2>HAVE A PROJECT<br />IN MIND?</h2><p>Tell us about your equipment, site or service requirement. We will respond with a practical next step.</p></div><a className="contactCircle" href={talkToUs} target="_blank" rel="noreferrer"><span>Talk to us</span><ArrowUpRight /></a></section>
         </main>
-        <Footer go={go} />
-        <img src="/web.png" alt="" aria-hidden="true" className="fixed-bottom-left" />
+        <Footer />
+        {cornerArt}
     </div>;
 }
 
-function Footer({ go }) {
+function Footer() {
     return <footer>
         <div className="footerBrand"><img src="/logo.svg" alt="" width="64" height="64" /><div><b>MINESWELL SERVICES</b><p>Engineering that keeps mining moving.</p></div></div>
-        <div><h4>Contact</h4><a href="tel:+919199262531"><Phone aria-hidden="true" />+91 91992 62531</a><a href={`mailto:${email}`}><Mail aria-hidden="true" />{email}</a><span><MapPin aria-hidden="true" />Partatoli, Jaldra, Rourkela, Odisha</span></div>
-        <div><h4>Navigation</h4>{['About', 'Services', 'Projects', 'Contact'].map(x => <button key={x} onClick={() => go(x.toLowerCase())}>{x}</button>)}</div>
+        <div><h4>Contact</h4><a href="tel:+919199262531"><Phone aria-hidden="true" />+91 91992 62531</a><a href={`mailto:${email}`}><Mail aria-hidden="true" />{email}</a><span><MapPin aria-hidden="true" />1st Floor, Plot No. 379/3698, Partatoli, Jalda, Rourkela, Odisha 769043</span></div>
         <div className="legal">© {new Date().getFullYear()} Mineswell Services<br />All rights reserved.</div>
     </footer>;
 }
