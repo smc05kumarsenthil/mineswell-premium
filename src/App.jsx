@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ArrowUpRight, Check, ChevronDown, Clock, Cog, Drill, Mail, MapPin, Menu, Moon, Phone, Siren, Sun, Users, Wrench, X } from 'lucide-react';
+import { ArrowLeft, ArrowUpRight, Check, ChevronDown, Clock, Cog, Pickaxe, Mail, MapPin, Menu, MessageCircle, Moon, Phone, Siren, Sun, Users, Wrench, X } from 'lucide-react';
 
 const services = [
     { slug: 'adhoc', n: '01', title: 'Adhoc services', Icon: Siren, text: 'On-call mining and drilling assistance for urgent technical support, maintenance, supervision and operational guidance.' },
     { slug: 'maintenance', n: '02', title: 'Equipment maintenance', Icon: Cog, text: 'Planned and corrective maintenance focused on availability, reliability and equipment life.' },
-    { slug: 'drilling', n: '03', title: 'Drill assistance', Icon: Drill, text: 'Troubleshooting, maintenance, deployment and field supervision for surface drilling equipment.' }
+    { slug: 'drilling', n: '03', title: 'Drilling assistance', Icon: Pickaxe, text: 'Troubleshooting, maintenance, deployment and field supervision for surface drilling equipment.' }
 ];
 
 const serviceDetails = {
@@ -13,7 +13,7 @@ const serviceDetails = {
         intro: 'Mineswell Services provides on-call mining and drilling assistance for clients requiring immediate technical support, maintenance, supervision, or operational guidance at mining locations.',
         cards: [
             [Clock, 'On-Demand Support', 'Flexible support services whenever required, helping reduce downtime and accelerate operational recovery.'],
-            [Wrench, 'Drill Assistance', 'Technical assistance for troubleshooting, maintenance, deployment and supervision of drilling equipment, especially surface drills.'],
+            [Wrench, 'Drilling assistance', 'Technical assistance for troubleshooting, maintenance, deployment and supervision of drilling equipment, especially surface drills.'],
             [Users, 'Experienced Team', 'Practical field support backed by mining-equipment and drilling experience.']
         ],
         detail: 'Our non-contract service model is designed for mining sites that need quick and efficient technical assistance without a long-term commitment.'
@@ -29,7 +29,7 @@ const serviceDetails = {
         detail: 'Mineswell combines field-oriented troubleshooting with disciplined maintenance execution to support equipment availability.'
     },
     drilling: {
-        title: 'Drill Assistance',
+        title: 'Drilling assistance',
         intro: 'Specialist field support for surface drilling equipment covering troubleshooting, maintenance, deployment, supervision and operational guidance.',
         cards: [
             [Wrench, 'Technical Troubleshooting', 'Systematic fault finding and technical support for drill systems and components.'],
@@ -57,7 +57,9 @@ const clients = [
 ];
 const whatsapp = 'https://wa.me/919199262531?text=Hello%20Mineswell%20Services%2C%20I%20would%20like%20to%20request%20support.';
 const talkToUs = 'https://wa.me/919199262531?text=Hello%20Mineswell%20Services%2C%20I%20would%20like%20to%20discuss%20a%20project.';
-const email ='sumeet.kumar@mineswell.co.in';
+const email = 'sumeet.kumar@mineswell.co.in';
+const phone = '+91 91992 62531';
+const tel = 'tel:+919199262531';
 
 // Sub-pages use hash routes so the browser Back button and shared links work:
 // #/services/<slug> → service detail, #/clients → clients page. Anything else → home.
@@ -226,7 +228,7 @@ function App() {
                 <div className="serviceGrid" data-reveal="group">{services.map((s, i) => (
                     <article className="card" key={s.slug} style={{ '--i': i }} onClick={() => openService(s.slug)}>
                         <div className="cardTop">
-                            <span className="cardNum">{s.n}</span>
+                            {/* <span className="cardNum">{s.n}</span> */}
                             <s.Icon className="cardIcon" aria-hidden="true" />
                         </div>
                         <div className="cardBody">
@@ -241,7 +243,29 @@ function App() {
             </section>
             <section id="projects" className="feature"><div className="featureContent"><div data-reveal="up"><span className="kicker">Field capability</span><h2>EXPERTISE THAT<br />KEEPS MINING<br /><span>MOVING.</span></h2><p>From scheduled maintenance to urgent site support, our teams bring disciplined execution and a practical understanding of heavy equipment.</p></div><div className="checks" data-reveal="stagger">{capabilities.map(x => <span key={x}><Check aria-hidden="true" />{x}</span>)}</div></div></section>
             <section className="stats" aria-label="Our commitments" data-reveal="stagger"><div><strong>24/7</strong><span>Support mindset</span></div><div><strong>100%</strong><span>Safety focused</span></div><div><strong>360°</strong><span>Service approach</span></div><div><strong>1</strong><span>Accountable partner</span></div></section>
-            <section id="contact" className="contact"><div data-reveal="up"><span className="kicker">Start a conversation</span><h2>HAVE A PROJECT<br />IN MIND?</h2><p>Tell us about your equipment, site or service requirement. We will respond with a practical next step.</p></div><a className="contactCircle" href={talkToUs} target="_blank" rel="noreferrer"><span>Talk to us</span><ArrowUpRight /></a></section>
+            <section id="contact" className="contact">
+                <div className="contactBg" aria-hidden="true" />
+                <div className="contactMain">
+                    <div data-reveal="up">
+                        <span className="kicker">Start a conversation</span>
+                        <h2>HAVE A PROJECT<br />IN MIND?</h2>
+                        <p>Tell us about your equipment, site or service requirement. We will respond with a practical next step.</p>
+                    </div>
+                    <div className="contactMethods" data-reveal="stagger">
+                        <a href={talkToUs} target="_blank" rel="noreferrer"><MessageCircle aria-hidden="true" /><span><small>WhatsApp</small>{phone}</span></a>
+                        <a href={tel}><Phone aria-hidden="true" /><span><small>Call us</small>{phone}</span></a>
+                        <a href={`mailto:${email}`}><Mail aria-hidden="true" /><span><small>Email</small>{email}</span></a>
+                        <div><MapPin aria-hidden="true" /><span><small>Visit</small>Jalda, Rourkela, Odisha</span></div>
+                    </div>
+                </div>
+                <div className="contactCta" data-reveal="up">
+                    <svg className="contactRing" viewBox="0 0 200 200" aria-hidden="true">
+                        <defs><path id="ringPath" d="M100,100 m-86,0 a86,86 0 1,1 172,0 a86,86 0 1,1 -172,0" /></defs>
+                        <text><textPath href="#ringPath" textLength="535" lengthAdjust="spacing">TALK TO US • FIELD SUPPORT • QUICK RESPONSE •</textPath></text>
+                    </svg>
+                    <a className="contactCircle" href={talkToUs} target="_blank" rel="noreferrer"><span>Talk to us</span><ArrowUpRight /></a>
+                </div>
+            </section>
         </main>
         <Footer />
         {cornerArt}
@@ -251,7 +275,7 @@ function App() {
 function Footer() {
     return <footer>
         <div className="footerBrand"><img src="/logo.svg" alt="" width="64" height="64" /><div><b>MINESWELL SERVICES</b><p>Engineering that keeps mining moving.</p></div></div>
-        <div><h4>Contact</h4><a href="tel:+919199262531"><Phone aria-hidden="true" />+91 91992 62531</a><a href={`mailto:${email}`}><Mail aria-hidden="true" />{email}</a><span><MapPin aria-hidden="true" />1st Floor, Plot No. 379/3698, Partatoli, Jalda, Rourkela, Odisha 769043</span></div>
+        {/* <div><h4>Contact</h4><a href={tel}><Phone aria-hidden="true" />{phone}</a><a href={`mailto:${email}`}><Mail aria-hidden="true" />{email}</a><span><MapPin aria-hidden="true" />1st Floor, Plot No. 379/3698, Partatoli, Jalda, Rourkela, Odisha 769043</span></div> */}
         <div className="legal">© {new Date().getFullYear()} Mineswell Services<br />All rights reserved.</div>
     </footer>;
 }

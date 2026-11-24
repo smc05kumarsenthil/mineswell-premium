@@ -35,5 +35,5 @@ Marketing site for Mineswell Services, a mining equipment maintenance and field-
 ## Gotchas
 - `dist/` is **committed** (not gitignored). Rebuilding replaces the hashed assets in `dist/assets/`.
 - Confirmed contact details (from the user):
-  - Phone/WhatsApp: `+91 91992 62531`. It's used in `whatsapp`, `talkToUs` and the footer tel link.
+  - Phone/WhatsApp: `+91 91992 62531`. The constants `phone` (display) and `tel` (link) are used by the contact section and the footer; `whatsapp` and `talkToUs` hold the wa.me links.
   - Address: 1st Floor, Plot No. 379/3698, Partatoli, Jalda, Rourkela, Odisha 769043 (footer). The hero location is "Rourkela, India".
