@@ -148,7 +148,7 @@ const values = [
 
 // Managing Director profile.
 // `photo` is optional: put a file in public/team/ and use e.g. '/team/sumeet-kumar.jpg'.
-const md = { name: 'Sumeet Kumar', role: 'Managing Director', photo: null };
+const md = { name: 'Sumeet Kumar', role: 'Managing Director', photo: '/sumeet-kumar.jpg' };
 const mdHighlights = [
     ['~20', 'Years of experience'],
     ['Service', 'Team leadership'],
