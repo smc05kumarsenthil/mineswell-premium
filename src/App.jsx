@@ -177,27 +177,16 @@ const mdCareer = [
 // `logo` is optional: put files in public/clients/ and use e.g. '/clients/acme.svg'.
 // Without a logo, the card shows the client's initials.
 const clients = [
-    { name: 'Client Name', sector: 'Iron ore mining', location: 'Odisha, India', logo: null },
-    { name: 'Client Name', sector: 'Coal mining', location: 'Jharkhand, India', logo: null },
-    {
-        name: 'Client Name',
-        sector: 'Limestone quarry',
-        location: 'Chhattisgarh, India',
-        logo: null,
-    },
-    {
-        name: 'Client Name',
-        sector: 'Surface drilling contractor',
-        location: 'Odisha, India',
-        logo: null,
-    },
-    { name: 'Client Name', sector: 'Manganese mining', location: 'Odisha, India', logo: null },
-    { name: 'Client Name', sector: 'Infrastructure & tunnelling', location: 'India', logo: null },
+    { name: 'Apeksha Mining Engineers', sector: 'Mining', location: 'Odisha, India', logo: 'clients/apeksha-logo-updated.jpg' },
+    { name: 'Kalinga Commercial Corporation Limited', sector: 'Iron ore mining', location: 'Jharkhand, India', logo: 'clients/kcc.png' },
+
+    { name: '', sector: '', location: '', logo: null },
+    // { name: 'Client Name', sector: 'Infrastructure & tunnelling', location: 'India', logo: null },
 ];
 // Contact details
 const email = 'sumeet.kumar@mineswell.co.in';
 const phone = '+91 91992 62531';
-const tel = 'tel:+919199262531';
+const tel = 'tel:+91 91992 62531';
 
 // WhatsApp chat links with a pre-filled first message
 const waLink = message => `https://wa.me/919199262531?text=${encodeURIComponent(message)}`;

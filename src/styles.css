@@ -1689,7 +1689,7 @@ section[id] {
     display: flex;
     width: max-content;
     padding: 12px 0 28px; /* room for the hover lift and shadow */
-    animation: marquee 40s linear infinite;
+    animation: marquee 25s linear infinite;
 }
 
 /* Pause when the visitor hovers or tabs into the strip */
